@@ -9,25 +9,60 @@ import javax.swing.*
 import javax.swing.table.DefaultTableModel
 import javax.swing.ImageIcon
 import javax.swing.JScrollPane
-import javax.swing.JList
 import javax.swing.JTabbedPane
 import javax.swing.JFileChooser
 import javax.swing.JMenuItem
 import javax.swing.JMenu
 import javax.swing.JMenuBar
 import kotlin.system.exitProcess
+import javax.swing.text.StyleConstants
+import javax.swing.text.SimpleAttributeSet
+import javax.swing.text.StyleContext
+import java.awt.Color
+import javax.swing.JTextPane
+import javax.swing.text.Style
+import java.awt.AWTEventMulticaster.getListeners
+
+
+
+
 
 class Principal(title: String) : JFrame(title),ActionListener {
     override fun actionPerformed(e: ActionEvent?) {
         if(e!!.source==itemAnalisLexico) {
+            terminal.text = ""
             val analisis = Scanner(areaTexto.text)
             analisis.analizar()
             val parser = Parser(analisis)
-            for (salida in analisis.dameSalidas())
-                terminal.text += salida+"\n"
-            parser.program()
-            for (salida in parser.dameSalida())
-                terminal.text += salida+"\n"
+            var flag = false
+            for (salida in analisis.dameSalidas()) {
+                if(salida.last()=='$') {
+                    flag = true
+                    appendToPane(terminal, salida.substring(0, salida.length - 1) + "\n", Color.RED)
+                    JOptionPane.showMessageDialog(null,salida.substring(0, salida.length - 1))
+                }
+                else
+                    appendToPane(terminal,salida + "\n",Color.BLACK)
+            }
+            if(!flag)
+                appendToPane(terminal,"El Scanning no tuvo errores \n", Color.GREEN)
+            else
+                return
+            flag = false
+            try {
+                parser.program()
+            }catch (e:Exception){
+            }
+            for (salida in parser.dameSalida()){
+                if(salida.last()=='$') {
+                    flag = true
+                    appendToPane(terminal, salida.substring(0, salida.length - 1) + "\n", Color.RED)
+                }
+                else
+                    appendToPane(terminal,salida + "\n",Color.BLACK)
+            }
+            if(!flag)
+                appendToPane(terminal,"El Parsing no tuvo errores \n", Color.GREEN)
 		}
 		if (e.source==itemSalir) {
 			exitProcess(0)
@@ -156,5 +191,13 @@ class Principal(title: String) : JFrame(title),ActionListener {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
             Principal("Compilador")
         }
+    }
+
+    private fun appendToPane(tp: JTextPane, msg: String, c: Color) {
+        val doc = tp.styledDocument;
+        val style = tp.addStyle("I'm a Style", null)
+        StyleConstants.setForeground(style, c)
+        doc.insertString(doc.length,msg,style);
+
     }
 }

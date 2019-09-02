@@ -18,7 +18,7 @@ class Parser(private var scan:Scanner){
              return
          }
         JOptionPane.showMessageDialog(null,"Error..... Se esperaba " + Tokens.values()[t].name+ " no " + Tokens.values()[tkn].name);
-            estatutos.add("Error..... Se esperaba " + Tokens.values()[t].name+ " no " + Tokens.values()[tkn].name);
+            estatutos.add("Error..... Se esperaba " + Tokens.values()[t].name+ " no " + Tokens.values()[tkn].name+"$");
     }
     fun program(){
         when(tkn){
@@ -85,13 +85,13 @@ class Parser(private var scan:Scanner){
                         eat(Tokens.ASTER.ordinal)
                         eat(Tokens.ID.ordinal)
                     }
-                    //else -> estatutos.add("Error")
                 }
             }
             Tokens.FALSE.ordinal-> eat(Tokens.FALSE.ordinal)
             Tokens.TRUE.ordinal-> eat(Tokens.TRUE.ordinal)
             Tokens.NFLOA.ordinal-> eat(Tokens.NFLOA.ordinal)
             Tokens.NINTE.ordinal-> eat(Tokens.NINTE.ordinal)
+            else -> estatutos.add("Error... falta una expresion$")
         }
     }
     fun dameSalida() = estatutos
