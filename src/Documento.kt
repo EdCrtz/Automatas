@@ -77,7 +77,7 @@ class Documento:DefaultStyledDocument() {
         oldString = currentString
     }
     private fun palabraRes(palabra:String):Boolean {
-        if (palabra.matches(("(do|until|true|false|class|boolean|int|system|ln|readln|float)").toRegex()))
+        if (palabra.matches(("(do|until|true|false|class|boolean|int|system|in|readln|float)").toRegex()))
             return true
         return false
     }

@@ -27,7 +27,8 @@ class Parser(private var scan:Scanner){
                 eat(Tokens.ID.ordinal)
                 varDeclaration()
                 eat(Tokens.LBRACE.ordinal)
-                statement()
+                while(tkn == Tokens.DO.ordinal|| tkn == Tokens.SIR.ordinal ||tkn == Tokens.ID.ordinal ||tkn == Tokens.LBRACE.ordinal)
+                    statement()
                 eat(Tokens.RBRACE.ordinal)
             }
             else-> estatutos.add("Error")
@@ -37,7 +38,7 @@ class Parser(private var scan:Scanner){
         when(tkn) {
             Tokens.LBRACE.ordinal->{
                 eat(Tokens.LBRACE.ordinal)
-                while(tkn == Tokens.DO.ordinal|| tkn == Tokens.SLR.ordinal ||tkn == Tokens.ID.ordinal)
+                while(tkn == Tokens.DO.ordinal|| tkn == Tokens.SIR.ordinal ||tkn == Tokens.ID.ordinal)
                     statement()
                 eat(Tokens.RBRACE.ordinal)
             }
@@ -49,8 +50,8 @@ class Parser(private var scan:Scanner){
                 expresion()
                 eat(Tokens.RPARENT.ordinal)
             }
-            Tokens.SLR.ordinal->{
-                eat(Tokens.SLR.ordinal)
+            Tokens.SIR.ordinal->{
+                eat(Tokens.SIR.ordinal)
                 eat(Tokens.LPAREN.ordinal)
                 expresion()
                 eat(Tokens.RPARENT.ordinal)

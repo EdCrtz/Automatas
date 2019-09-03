@@ -11,7 +11,7 @@ class Scanner//CONSTRUCTOR
     private var indice:Int = 0
     private var tokens: Array<String> = codigo.split(("\\s+").toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
     private var token:String
-    private val reservadas = arrayOf<String>("do", "until","class", "system.ln.readln")
+    private val reservadas = arrayOf<String>("do", "until","class", "system.in.readln")
     private val tipos = arrayOf("boolean", "int", "float")
     private val operadores = arrayOf<String>("*", "-", "+","<","=")
     private val delimitadores = arrayOf<String>("{", "}", "(",")",";")
@@ -38,7 +38,7 @@ class Scanner//CONSTRUCTOR
                 "do"-> thisToken.tipo = Tokens.DO.ordinal
                 "until"->thisToken.tipo = Tokens.UNTIL.ordinal
                 "class"->thisToken.tipo = Tokens.CLASS.ordinal
-                "system.ln.readln"->thisToken.tipo = Tokens.SLR.ordinal
+                "system.in.readln"->thisToken.tipo = Tokens.SIR.ordinal
             }
             return thisToken
         }

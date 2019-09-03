@@ -1,6 +1,7 @@
-enum class Tokens {
+package Java;
+public enum Tokens {
     CLASS,
-    INT ,
+    INT,
     FLOAT,
     BOOLEAN,
     DO,
@@ -20,5 +21,5 @@ enum class Tokens {
     NFLOA,
     SEMI,
     FALSE,
-    TRUE
+    TRUE;
 }
