@@ -9,13 +9,13 @@ import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.io.*;
 
 public class Principal extends JFrame implements ActionListener {
     private JMenuBar barraMenu;
-    private JMenu menuArchivo,MenuAnalisis;
+    private JMenu menuArchivo,menuAnalisis;
     // Menu Archivo
-    private JMenuItem itemNuevo,itemAbrir,itemGuardar,itemSalir,itemAnalisLexico;
+    private JMenuItem itemNuevo,itemAbrir,itemGuardar,itemSalir,itemParser,itemScanner,itemArbol;
     private JFileChooser ventanaArchivos;
     private File archivo;
     private JTextPane areaTexto,terminal;
@@ -39,8 +39,8 @@ public class Principal extends JFrame implements ActionListener {
         setJMenuBar(barraMenu);
         menuArchivo = new JMenu("Archivo");
         menuArchivo.setIcon(new ImageIcon("archivo.png"));
-        MenuAnalisis =  new JMenu("Analisis");
-        MenuAnalisis.setIcon(new ImageIcon("analisis.png"));
+        menuAnalisis =  new JMenu("Fases");
+        menuAnalisis.setIcon(new ImageIcon("analisis.png"));
         ventanaArchivos = new JFileChooser();
         itemNuevo = new JMenuItem("Nuevo");
         itemAbrir = new JMenuItem("Abrir...");
@@ -50,17 +50,20 @@ public class Principal extends JFrame implements ActionListener {
         itemGuardar.addActionListener(this);
         itemAbrir.addActionListener(this);
         itemNuevo.addActionListener(this);
-        itemAnalisLexico  = new JMenuItem("Analizar codigo");
-        itemAnalisLexico.addActionListener(this);
+        itemScanner = new JMenuItem("Scanner");
+        itemParser  = new JMenuItem("Parser");
+        itemParser.addActionListener(this);
+        itemScanner.addActionListener(this);
         ventanaArchivos = new JFileChooser();
         menuArchivo.add(itemNuevo);
         menuArchivo.add(itemAbrir);
         menuArchivo.add(itemGuardar);
         menuArchivo.addSeparator();
         menuArchivo.add(itemSalir);
-        MenuAnalisis.add(itemAnalisLexico);
+        menuAnalisis.add(itemScanner);
+        menuAnalisis.add(itemParser);
         barraMenu.add(menuArchivo);
-        barraMenu.add(MenuAnalisis);
+        barraMenu.add(menuAnalisis);
         areaTexto = new JTextPane();
         ventanaArchivos= new JFileChooser("Guardar");
         areaTexto.setFont(new Font("Consolas", Font.PLAIN, 12));
@@ -79,7 +82,8 @@ public class Principal extends JFrame implements ActionListener {
         itemGuardar.setIcon(new ImageIcon("guardar.png"));
         itemAbrir.setIcon(new ImageIcon("abrir.png"));
         itemSalir.setIcon( new ImageIcon("salir.png"));
-        itemAnalisLexico.setIcon(new ImageIcon("lexico.png"));
+        itemScanner.setIcon(new ImageIcon("scanner.png"));
+        itemParser.setIcon(new ImageIcon("parser.png"));
         documentos.setIconAt(0, new ImageIcon("codigo.png"));
         consola.setIconAt(0, new ImageIcon("consola.png"));
         consola.setIconAt(1, new ImageIcon("tabla.png"));
@@ -97,8 +101,94 @@ public class Principal extends JFrame implements ActionListener {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         new Principal();
     }
+    public boolean guardar() {
+        try {
+            if(archivo==null) {
+                ventanaArchivos.setDialogTitle("Guardando..");
+                ventanaArchivos.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                if(ventanaArchivos.showSaveDialog(this)==JFileChooser.CANCEL_OPTION)
+                    return false;
+                archivo=ventanaArchivos.getSelectedFile();
+                documentos.setTitleAt(0, archivo.getName());
+            }
+            FileWriter fw = new FileWriter(archivo);
+            BufferedWriter bf = new BufferedWriter(fw);
+            bf.write(areaTexto.getText());
+            bf.close();
+            fw.close();
+        }catch (Exception e) {
+            System.out.println("Houston tenemos un problema?");
+            return false;
+        }
+        return true;
+    }
+    public boolean abrir() {
+        String texto="",linea;
+        try {
+            FileReader fr = new FileReader(archivo);
+            BufferedReader br= new BufferedReader(fr);
+            while((linea=br.readLine())!=null)
+                texto+=linea+"\n";
+            areaTexto.setText(texto);
+            return true;
+        }catch (Exception e) {
+            archivo=null;
+            JOptionPane.showMessageDialog(null, "Tipo de archivo incompatible", "Warning",
+                    JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+    }
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource()==itemAnalisLexico) {
+        if (e.getSource()==itemSalir) {
+            System.exit(0);
+            return;
+        }
+        if(e.getSource() == itemAbrir){
+            ventanaArchivos.setDialogTitle("Abrir..");
+            ventanaArchivos.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            if(ventanaArchivos.showOpenDialog(this)==JFileChooser.CANCEL_OPTION)
+                return;
+            archivo=ventanaArchivos.getSelectedFile();
+            documentos.setTitleAt(0, archivo.getName());
+            abrir();
+        }
+        if(e.getSource() == itemGuardar){
+            guardar();
+            return;
+        }
+        if(e.getSource()==itemScanner){
+            terminal.setText("");
+            Scanner analisis = new Scanner(areaTexto.getText());
+            analisis.analizar();
+            boolean flag = false;
+            for (String salida: analisis.dameSalidas()) {
+                if(salida.charAt(salida.length()-1)=='$') {
+                    flag = true;
+                    try {
+                        appendToPane(terminal, salida.substring(0, salida.length() - 1) + "\n", Color.RED);
+                    } catch (BadLocationException ex) {
+                        ex.printStackTrace();
+                    }
+                    JOptionPane.showMessageDialog(null,salida.substring(0, salida.length() - 1));
+                }
+                else {
+                    try {
+                        appendToPane(terminal,salida + "\n",Color.BLACK);
+                    } catch (BadLocationException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+            if(!flag) {
+                try {
+                    appendToPane(terminal,"El Scanning no tuvo errores \n", Color.GREEN);
+                } catch (BadLocationException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            return;
+        }
+        if(e.getSource()==itemParser) {
             terminal.setText("");
             Scanner analisis = new Scanner(areaTexto.getText());
             analisis.analizar();
@@ -130,10 +220,7 @@ public class Principal extends JFrame implements ActionListener {
                 }
                 flag = false;
             }
-            try {
-                parser.program();
-            }catch (Exception ignored){
-            }
+            parser.program();
             for (String salida:parser.dameSalida()){
                 if(salida.charAt(salida.length()-1)=='$') {
                     flag = true;

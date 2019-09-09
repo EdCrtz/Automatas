@@ -6,7 +6,7 @@ public final class Token {
    private int tipo;
    private int clasificacion;
    public String toString() {
-      return this.clasificacion != -1 ? "Token encontrado...." + this.clas[this.clasificacion] + ' ' + this.valor + ' ' + Tokens.values()[this.tipo].name() : "Token error... " + this.valor + " no puede ser acepatado$";
+      return this.clasificacion != -1 ? "Token encontrado...." + this.clas[this.clasificacion] + ' ' + this.valor: "Token error... " + this.valor + " no puede ser acepatado$";
    }
 
    public final String getValor() {

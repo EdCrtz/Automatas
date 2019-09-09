@@ -177,7 +177,7 @@ class Principal(title: String) : JFrame(title),ActionListener {
         itemGuardar.icon = ImageIcon("guardar.png")
         itemAbrir.icon = ImageIcon("abrir.png")
         itemSalir.icon = ImageIcon("salir.png")
-        itemAnalisLexico.icon = ImageIcon("lexico.png")
+        itemAnalisLexico.icon = ImageIcon("scanner.png")
         documentos.setIconAt(0, ImageIcon("codigo.png"))
         consola.setIconAt(0, ImageIcon("consola.png"))
         consola.setIconAt(1, ImageIcon("tabla.png"))

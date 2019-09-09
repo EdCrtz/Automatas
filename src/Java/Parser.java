@@ -10,131 +10,127 @@ public final class Parser {
    private Scanner scan;
 
    private void advance() {
-      this.tkn = this.scan.getToken().getTipo();
+      tkn = scan.getToken().getTipo();
    }
 
    private void eat(int t) {
-      if (this.tkn != -2) {
-         this.estatutos.add("Token Esperado " + Tokens.values()[t].name() + " Token Recibido " + Tokens.values()[this.tkn].name());
-         if (this.tkn == t) {
-            this.advance();
-         } else {
-            JOptionPane.showMessageDialog((Component)null, "Error..... Se esperaba " + Tokens.values()[t].name() + " no " + Tokens.values()[this.tkn].name());
-            this.estatutos.add("Error..... Se esperaba " + Tokens.values()[t].name() + " no " + Tokens.values()[this.tkn].name() + "$");
-         }
+      if(tkn == -2) // Si el token es Fin del archivo
+      {
+         estatutos.add("Token Esperado " + Tokens.values()[t].getCad()+ " Token Recibido <EOF>" );
+         JOptionPane.showMessageDialog((Component)null, "Error..... Se esperaba " + Tokens.values()[t].getCad()+ " no <EOF>");
+         estatutos.add("Error..... Se esperaba " + Tokens.values()[t].name() + " no <EOF>$");
+         return;
+      }
+      estatutos.add("Token Esperado " + Tokens.values()[t].getCad() + " Token Recibido " + Tokens.values()[t].getCad());
+      if (tkn == t) {
+         advance();
+      } else {
+         JOptionPane.showMessageDialog((Component)null, "Error..... Se esperaba " + Tokens.values()[t].getCad() + " no " + Tokens.values()[tkn].getCad());
+         estatutos.add("Error..... Se esperaba " + Tokens.values()[t].getCad() + " no " + Tokens.values()[tkn].getCad() + "$");
       }
    }
    public final void program() {
-      int var1 = this.tkn;
-      if (var1 == Tokens.CLASS.ordinal()) {
-         this.eat(Tokens.CLASS.ordinal());
-         this.eat(Tokens.ID.ordinal());
-         this.varDeclaration();
-         this.eat(Tokens.LBRACE.ordinal());
-
-         while(this.tkn == Tokens.DO.ordinal() || this.tkn == Tokens.SIR.ordinal() || this.tkn == Tokens.ID.ordinal() || this.tkn == Tokens.LBRACE.ordinal()) {
-            this.statement();
+      if (tkn == Tokens.CLASS.ordinal()) {
+         eat(Tokens.CLASS.ordinal());
+         eat(Tokens.ID.ordinal());
+         varDeclaration();
+         eat(Tokens.LBRACE.ordinal());
+         while(tkn == Tokens.DO.ordinal() || tkn == Tokens.SIR.ordinal() || tkn == Tokens.ID.ordinal() || tkn == Tokens.LBRACE.ordinal()) {
+            statement();
          }
-
-         this.eat(Tokens.RBRACE.ordinal());
+         eat(Tokens.RBRACE.ordinal());
       } else {
-         this.estatutos.add("Error");
+         estatutos.add("Error");
       }
 
    }
 
    private void statement() {
-      int var1 = this.tkn;
-      if (var1 == Tokens.LBRACE.ordinal()) {
-         this.eat(Tokens.LBRACE.ordinal());
-
-         while(this.tkn == Tokens.DO.ordinal() || this.tkn == Tokens.SIR.ordinal() || this.tkn == Tokens.ID.ordinal()) {
-            this.statement();
+      if (tkn == Tokens.LBRACE.ordinal()) {
+         eat(Tokens.LBRACE.ordinal());
+         while(tkn == Tokens.DO.ordinal() || tkn == Tokens.SIR.ordinal() || tkn == Tokens.ID.ordinal()) {
+            statement();
          }
-
-         this.eat(Tokens.RBRACE.ordinal());
-      } else if (var1 == Tokens.DO.ordinal()) {
-         this.eat(Tokens.DO.ordinal());
-         this.statement();
-         this.eat(Tokens.UNTIL.ordinal());
-         this.eat(Tokens.LPAREN.ordinal());
-         this.expresion();
-         this.eat(Tokens.RPARENT.ordinal());
-      } else if (var1 == Tokens.SIR.ordinal()) {
-         this.eat(Tokens.SIR.ordinal());
-         this.eat(Tokens.LPAREN.ordinal());
-         this.expresion();
-         this.eat(Tokens.RPARENT.ordinal());
-         this.eat(Tokens.SEMI.ordinal());
-      } else if (var1 == Tokens.ID.ordinal()) {
-         this.eat(Tokens.ID.ordinal());
-         this.eat(Tokens.EQ.ordinal());
-         this.expresion();
-         this.eat(Tokens.SEMI.ordinal());
+         eat(Tokens.RBRACE.ordinal());
+      } else if (tkn == Tokens.DO.ordinal()) {
+         eat(Tokens.DO.ordinal());
+         statement();
+         eat(Tokens.UNTIL.ordinal());
+         eat(Tokens.LPAREN.ordinal());
+         expresion();
+         eat(Tokens.RPARENT.ordinal());
+      } else if (tkn == Tokens.SIR.ordinal()) {
+         eat(Tokens.SIR.ordinal());
+         eat(Tokens.LPAREN.ordinal());
+         expresion();
+         eat(Tokens.RPARENT.ordinal());
+         eat(Tokens.SEMI.ordinal());
+      } else if (tkn == Tokens.ID.ordinal()) {
+         eat(Tokens.ID.ordinal());
+         eat(Tokens.EQ.ordinal());
+         expresion();
+         eat(Tokens.SEMI.ordinal());
       }
 
    }
 
    public final void expresion() {
-      int var1 = this.tkn;
-      if (var1 == Tokens.ID.ordinal()) {
-         this.eat(Tokens.ID.ordinal());
-         int var2 = this.tkn;
-         if (var2 == Tokens.MIN.ordinal()) {
-            this.eat(Tokens.MIN.ordinal());
-            this.eat(Tokens.ID.ordinal());
-         } else if (var2 == Tokens.PLUS.ordinal()) {
-            this.eat(Tokens.PLUS.ordinal());
-            this.eat(Tokens.ID.ordinal());
-         } else if (var2 == Tokens.MINUS.ordinal()) {
-            this.eat(Tokens.MINUS.ordinal());
-            this.eat(Tokens.ID.ordinal());
-         } else if (var2 == Tokens.ASTER.ordinal()) {
-            this.eat(Tokens.ASTER.ordinal());
-            this.eat(Tokens.ID.ordinal());
+      if (tkn == Tokens.ID.ordinal()) {
+         eat(Tokens.ID.ordinal());
+         if (tkn == Tokens.MIN.ordinal()) {
+            eat(Tokens.MIN.ordinal());
+            eat(Tokens.ID.ordinal());
+         } else if (tkn == Tokens.PLUS.ordinal()) {
+            eat(Tokens.PLUS.ordinal());
+            eat(Tokens.ID.ordinal());
+         } else if (tkn == Tokens.MINUS.ordinal()) {
+            eat(Tokens.MINUS.ordinal());
+            eat(Tokens.ID.ordinal());
+         } else if (tkn == Tokens.ASTER.ordinal()) {
+            eat(Tokens.ASTER.ordinal());
+            eat(Tokens.ID.ordinal());
          }
-      } else if (var1 == Tokens.FALSE.ordinal()) {
-         this.eat(Tokens.FALSE.ordinal());
-      } else if (var1 == Tokens.TRUE.ordinal()) {
-         this.eat(Tokens.TRUE.ordinal());
-      } else if (var1 == Tokens.NFLOA.ordinal()) {
-         this.eat(Tokens.NFLOA.ordinal());
-      } else if (var1 == Tokens.NINTE.ordinal()) {
-         this.eat(Tokens.NINTE.ordinal());
+      } else if (tkn == Tokens.FALSE.ordinal()) {
+         eat(Tokens.FALSE.ordinal());
+      } else if (tkn == Tokens.TRUE.ordinal()) {
+         eat(Tokens.TRUE.ordinal());
+      } else if (tkn == Tokens.NFLOA.ordinal()) {
+         eat(Tokens.NFLOA.ordinal());
+      } else if (tkn == Tokens.NINTE.ordinal()) {
+         eat(Tokens.NINTE.ordinal());
       } else {
-         this.estatutos.add("Error... falta una expresion$");
+         estatutos.add("Error... falta una expresion$");
       }
 
    }
    public final ArrayList<String> dameSalida() {
-      return this.estatutos;
+      return estatutos;
    }
 
    private final void varDeclaration() {
-      int var1 = this.tkn;
-      if (var1 == Tokens.BOOLEAN.ordinal()) {
-         this.eat(Tokens.BOOLEAN.ordinal());
-         this.eat(Tokens.ID.ordinal());
-         this.eat(Tokens.SEMI.ordinal());
-         this.varDeclaration();
-      } else if (var1 == Tokens.INT.ordinal()) {
-         this.eat(Tokens.INT.ordinal());
-         this.eat(Tokens.ID.ordinal());
-         this.eat(Tokens.SEMI.ordinal());
-         this.varDeclaration();
-      } else if (var1 == Tokens.FLOAT.ordinal()) {
-         this.eat(Tokens.FLOAT.ordinal());
-         this.eat(Tokens.ID.ordinal());
-         this.eat(Tokens.SEMI.ordinal());
-         this.varDeclaration();
+      if (tkn == Tokens.BOOLEAN.ordinal()) {
+         eat(Tokens.BOOLEAN.ordinal());
+         eat(Tokens.ID.ordinal());
+         eat(Tokens.SEMI.ordinal());
+         varDeclaration();
+      } else if (tkn == Tokens.INT.ordinal()) {
+         eat(Tokens.INT.ordinal());
+         eat(Tokens.ID.ordinal());
+         eat(Tokens.SEMI.ordinal());
+         varDeclaration();
+      } else if (tkn == Tokens.FLOAT.ordinal()) {
+         eat(Tokens.FLOAT.ordinal());
+         eat(Tokens.ID.ordinal());
+         eat(Tokens.SEMI.ordinal());
+         varDeclaration();
       }
 
    }
 
    public Parser(Scanner scan) {
       this.scan = scan;
-      this.estatutos = new ArrayList<String>();
-      this.tkn = this.scan.getToken().getTipo();
-      this.estatutos.add("Iniciando el parsing");
+      estatutos = new ArrayList<String>();
+      tkn = scan.getToken().getTipo();
+      estatutos.add("Iniciando el parsing");
    }
 }
