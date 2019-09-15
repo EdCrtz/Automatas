@@ -1,4 +1,7 @@
 package Java.ArbolSincatico;
 
-public class Statx {
+public abstract class Statx {
+    public Object[] getFields(Object[] obj) {
+        return obj;
+    }
 }

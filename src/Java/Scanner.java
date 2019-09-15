@@ -17,87 +17,30 @@ public final class Scanner {
          token = tokens[indice];
          indice++;
          Token thisToken = new Token(token, -1, -1);
-         if (Arrays.asList("do", "until", "class", "system.in.readln").contains(token)) {
-            thisToken.setClasificacion(0);
-            switch (token) {
-               case "do":
-                  thisToken.setTipo(Tokens.DO.ordinal());
-                  break;
-               case "class":
-                  thisToken.setTipo(Tokens.CLASS.ordinal());
-                  break;
-               case "until":
-                  thisToken.setTipo(Tokens.UNTIL.ordinal());
-                  break;
-               case "system.in.readln":
-                  thisToken.setTipo(Tokens.SIR.ordinal());
-                  break;
+         for(Tokens e:  Tokens.values()){
+            if(token.equals(e.getCad())){
+               thisToken.setTipo(e.ordinal());
+               if (Arrays.asList("do", "until", "class", "system.in.readln").contains(token)) {
+                  thisToken.setClasificacion(0);
+                  return thisToken;
+               }
+               if (Arrays.asList("boolean", "int", "float").contains(token)) {
+                  thisToken.setClasificacion(1);
+                  return  thisToken;
+               }
+               if (Arrays.asList("*","+","-","<","=").contains(token)) {
+                  thisToken.setClasificacion(2);
+                  return thisToken;
+               }
+               if (Arrays.asList("(",")","{","}",";").contains(token)) {
+                  thisToken.setClasificacion(3);
+                  return  thisToken;
+               }
+               if(token.equals("true") || token.equals("false")){
+                  thisToken.setClasificacion(4);
+                  return  thisToken;
+               }
             }
-            return thisToken;
-         }
-         if (Arrays.asList("boolean", "int", "float").contains(token)) {
-            thisToken.setClasificacion(1);
-            switch (token) {
-               case "int":
-                  thisToken.setTipo(Tokens.INT.ordinal());
-                  break;
-               case "boolan":
-                  thisToken.setTipo(Tokens.BOOLEAN.ordinal());
-                  break;
-               default:
-                  thisToken.setTipo(Tokens.FLOAT.ordinal());
-            }
-            return thisToken;
-         }
-         if (Arrays.asList("*","+","-","<","=").contains(token)) {
-            thisToken.setClasificacion(2);
-            switch (token) {
-               case "*":
-                  thisToken.setTipo(Tokens.ASTER.ordinal());
-                  break;
-               case "+":
-                  thisToken.setTipo(Tokens.PLUS.ordinal());
-                  break;
-               case "-":
-                  thisToken.setTipo(Tokens.MINUS.ordinal());
-                  break;
-               case "<":
-                  thisToken.setTipo(Tokens.MIN.ordinal());
-                  break;
-               case "=":
-                  thisToken.setTipo(Tokens.EQ.ordinal());
-                  break;
-            }
-            return thisToken;
-         }
-         if (Arrays.asList("(",")","{","}",";").contains(token)) {
-            thisToken.setClasificacion(3);
-            switch (token) {
-               case "(":
-                  thisToken.setTipo(Tokens.LPAREN.ordinal());
-                  break;
-               case ")":
-                  thisToken.setTipo(Tokens.RPARENT.ordinal());
-                  break;
-               case ";":
-                  thisToken.setTipo(Tokens.SEMI.ordinal());
-                  break;
-               case "{":
-                  thisToken.setTipo(Tokens.LBRACE.ordinal());
-                  break;
-               case "}":
-                  thisToken.setTipo(Tokens.RBRACE.ordinal());
-                  break;
-            }
-            return thisToken;
-         }
-         if (token.equals("true") || token.equals("false")) {
-            thisToken.setClasificacion(4);
-            if (token.equals("true"))
-               thisToken.setTipo(Tokens.TRUE.ordinal());
-            else
-               thisToken.setTipo(Tokens.FALSE.ordinal());
-            return thisToken;
          }
          if (validaIdentificador(token)) {
             thisToken.setClasificacion(5);

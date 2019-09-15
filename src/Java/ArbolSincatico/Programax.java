@@ -1,17 +1,14 @@
 package Java.ArbolSincatico;
-
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class Programax {
-    //private Declarax s1;
-    private Vector s1;
-    private Statx s2;
-
-    public Programax(Vector st1, Statx st2) {
-        s1 = st1;
-        s2 = st2;
+    public ArrayList<Declarax> declaraciones;
+    public ArrayList<Statx> statement;
+    public Programax(ArrayList<Declarax> declaraciones,ArrayList<Statx> statement){
+        this.declaraciones = declaraciones;
+        this.statement = statement;
     }
-    public Vector getDeclaration() {return s1;}
-
-    public Statx getStatement() {return s2;}
+    public String toString(){
+        return "Programax: "+declaraciones +", "+ statement;
+    }
 }

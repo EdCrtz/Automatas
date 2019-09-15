@@ -13,33 +13,35 @@ import java.io.*;
 
 public class Principal extends JFrame implements ActionListener {
     private JMenuBar barraMenu;
-    private JMenu menuArchivo,menuAnalisis;
+    private JMenu menuArchivo, menuAnalisis;
     // Menu Archivo
-    private JMenuItem itemNuevo,itemAbrir,itemGuardar,itemSalir,itemParser,itemScanner,itemArbol;
+    private JMenuItem itemNuevo, itemAbrir, itemGuardar, itemSalir, itemParser, itemScanner, itemArbol;
     private JFileChooser ventanaArchivos;
     private File archivo;
-    private JTextPane areaTexto,terminal;
-    private JTabbedPane documentos,consola;
-    private String [] titulos ={"Tipo","Nombre","Valor"};
-    DefaultTableModel modelo = new DefaultTableModel(new Object[0][0],titulos);
+    private JTextPane areaTexto, terminal;
+    private JTabbedPane documentos, consola;
+    private String[] titulos = {"Tipo", "Nombre", "Valor"};
+    DefaultTableModel modelo = new DefaultTableModel(new Object[0][0], titulos);
 
     private JTable mitabla = new JTable(modelo);
-    private Principal(){
+
+    private Principal() {
         super("Compilador");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setIconImage(new ImageIcon("icono.png").getImage());
-        setLayout(new GridLayout(2,0));
-        setSize(600,450);
+        setLayout(new GridLayout(2, 0));
+        setSize(600, 450);
         setLocationRelativeTo(null);
         creaInterFaz();
         setVisible(true);
     }
+
     private void creaInterFaz() {
         barraMenu = new JMenuBar();
         setJMenuBar(barraMenu);
         menuArchivo = new JMenu("Archivo");
         menuArchivo.setIcon(new ImageIcon("archivo.png"));
-        menuAnalisis =  new JMenu("Fases");
+        menuAnalisis = new JMenu("Fases");
         menuAnalisis.setIcon(new ImageIcon("analisis.png"));
         ventanaArchivos = new JFileChooser();
         itemNuevo = new JMenuItem("Nuevo");
@@ -51,7 +53,7 @@ public class Principal extends JFrame implements ActionListener {
         itemAbrir.addActionListener(this);
         itemNuevo.addActionListener(this);
         itemScanner = new JMenuItem("Scanner");
-        itemParser  = new JMenuItem("Parser");
+        itemParser = new JMenuItem("Parser");
         itemParser.addActionListener(this);
         itemScanner.addActionListener(this);
         ventanaArchivos = new JFileChooser();
@@ -65,7 +67,7 @@ public class Principal extends JFrame implements ActionListener {
         barraMenu.add(menuArchivo);
         barraMenu.add(menuAnalisis);
         areaTexto = new JTextPane();
-        ventanaArchivos= new JFileChooser("Guardar");
+        ventanaArchivos = new JFileChooser("Guardar");
         areaTexto.setFont(new Font("Consolas", Font.PLAIN, 12));
         documentos = new JTabbedPane();
         consola = new JTabbedPane();
@@ -75,13 +77,13 @@ public class Principal extends JFrame implements ActionListener {
         add(documentos);
         terminal = new JTextPane();
         terminal.setEditable(false);
-        consola.addTab("Consola",new JScrollPane(terminal));
-        consola.addTab("Tabla",new JScrollPane(mitabla));
+        consola.addTab("Consola", new JScrollPane(terminal));
+        consola.addTab("Tabla", new JScrollPane(mitabla));
         add(consola);
         itemNuevo.setIcon(new ImageIcon("nuevo.png"));
         itemGuardar.setIcon(new ImageIcon("guardar.png"));
         itemAbrir.setIcon(new ImageIcon("abrir.png"));
-        itemSalir.setIcon( new ImageIcon("salir.png"));
+        itemSalir.setIcon(new ImageIcon("salir.png"));
         itemScanner.setIcon(new ImageIcon("scanner.png"));
         itemParser.setIcon(new ImageIcon("parser.png"));
         documentos.setIconAt(0, new ImageIcon("codigo.png"));
@@ -94,21 +96,23 @@ public class Principal extends JFrame implements ActionListener {
         StyledDocument doc = tp.getStyledDocument();
         Style style = tp.addStyle("I'm a Style", null);
         StyleConstants.setForeground(style, c);
-        doc.insertString(doc.getLength(),msg,style);
+        doc.insertString(doc.getLength(), msg, style);
 
     }
+
     public static void main(String[] args) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         new Principal();
     }
+
     public boolean guardar() {
         try {
-            if(archivo==null) {
+            if (archivo == null) {
                 ventanaArchivos.setDialogTitle("Guardando..");
                 ventanaArchivos.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                if(ventanaArchivos.showSaveDialog(this)==JFileChooser.CANCEL_OPTION)
+                if (ventanaArchivos.showSaveDialog(this) == JFileChooser.CANCEL_OPTION)
                     return false;
-                archivo=ventanaArchivos.getSelectedFile();
+                archivo = ventanaArchivos.getSelectedFile();
                 documentos.setTitleAt(0, archivo.getName());
             }
             FileWriter fw = new FileWriter(archivo);
@@ -116,134 +120,98 @@ public class Principal extends JFrame implements ActionListener {
             bf.write(areaTexto.getText());
             bf.close();
             fw.close();
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("Houston tenemos un problema?");
             return false;
         }
         return true;
     }
+
     public boolean abrir() {
-        String texto="",linea;
+        String texto = "", linea;
         try {
             FileReader fr = new FileReader(archivo);
-            BufferedReader br= new BufferedReader(fr);
-            while((linea=br.readLine())!=null)
-                texto+=linea+"\n";
+            BufferedReader br = new BufferedReader(fr);
+            while ((linea = br.readLine()) != null)
+                texto += linea + "\n";
             areaTexto.setText(texto);
             return true;
-        }catch (Exception e) {
-            archivo=null;
+        } catch (Exception e) {
+            archivo = null;
             JOptionPane.showMessageDialog(null, "Tipo de archivo incompatible", "Warning",
                     JOptionPane.WARNING_MESSAGE);
             return false;
         }
     }
+
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource()==itemSalir) {
+        if (e.getSource() == itemSalir) {
             System.exit(0);
             return;
         }
-        if(e.getSource() == itemAbrir){
+        if (e.getSource() == itemAbrir) {
             ventanaArchivos.setDialogTitle("Abrir..");
             ventanaArchivos.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            if(ventanaArchivos.showOpenDialog(this)==JFileChooser.CANCEL_OPTION)
+            if (ventanaArchivos.showOpenDialog(this) == JFileChooser.CANCEL_OPTION)
                 return;
-            archivo=ventanaArchivos.getSelectedFile();
+            archivo = ventanaArchivos.getSelectedFile();
             documentos.setTitleAt(0, archivo.getName());
             abrir();
+            terminal.setText("");
         }
-        if(e.getSource() == itemGuardar){
+        if (e.getSource() == itemGuardar) {
             guardar();
             return;
         }
-        if(e.getSource()==itemScanner){
-            terminal.setText("");
-            Scanner analisis = new Scanner(areaTexto.getText());
-            analisis.analizar();
-            boolean flag = false;
-            for (String salida: analisis.dameSalidas()) {
-                if(salida.charAt(salida.length()-1)=='$') {
-                    flag = true;
-                    try {
-                        appendToPane(terminal, salida.substring(0, salida.length() - 1) + "\n", Color.RED);
-                    } catch (BadLocationException ex) {
-                        ex.printStackTrace();
-                    }
-                    JOptionPane.showMessageDialog(null,salida.substring(0, salida.length() - 1));
-                }
-                else {
-                    try {
-                        appendToPane(terminal,salida + "\n",Color.BLACK);
-                    } catch (BadLocationException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            }
-            if(!flag) {
-                try {
-                    appendToPane(terminal,"El Scanning no tuvo errores \n", Color.GREEN);
-                } catch (BadLocationException ex) {
-                    ex.printStackTrace();
-                }
-            }
-            return;
-        }
-        if(e.getSource()==itemParser) {
+        if (e.getSource() == itemParser || e.getSource() == itemScanner) {
             terminal.setText("");
             Scanner analisis = new Scanner(areaTexto.getText());
             analisis.analizar();
             Parser parser = new Parser(analisis);
-            boolean flag = false;
-            for (String salida: analisis.dameSalidas()) {
-                if(salida.charAt(salida.length()-1)=='$') {
-                    flag = true;
+            for (String salida : analisis.dameSalidas()) {
+                if (salida.charAt(salida.length() - 1) == '$') {
                     try {
                         appendToPane(terminal, salida.substring(0, salida.length() - 1) + "\n", Color.RED);
                     } catch (BadLocationException ex) {
                         ex.printStackTrace();
                     }
-                    JOptionPane.showMessageDialog(null,salida.substring(0, salida.length() - 1));
+                    JOptionPane.showMessageDialog(null, salida.substring(0, salida.length() - 1));
+                    return;
                 }
-                else {
-                    try {
-                        appendToPane(terminal,salida + "\n",Color.BLACK);
-                    } catch (BadLocationException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            }
-            if(!flag) {
                 try {
-                    appendToPane(terminal,"El Scanning no tuvo errores \n", Color.GREEN);
+                    appendToPane(terminal, salida + "\n", Color.BLACK);
                 } catch (BadLocationException ex) {
                     ex.printStackTrace();
                 }
-                flag = false;
             }
+            try {
+                appendToPane(terminal, "El Scanning no tuvo errores \n", Color.GREEN);
+            } catch (BadLocationException ex) {
+                ex.printStackTrace();
+            }
+            if (e.getSource() == itemScanner)
+                return;
             parser.program();
-            for (String salida:parser.dameSalida()){
-                if(salida.charAt(salida.length()-1)=='$') {
-                    flag = true;
+            for (String salida : parser.dameSalida()) {
+                if (salida.charAt(salida.length() - 1) == '$') {
                     try {
                         appendToPane(terminal, salida.substring(0, salida.length() - 1) + "\n", Color.RED);
                     } catch (BadLocationException ex) {
                         ex.printStackTrace();
                     }
+                    JOptionPane.showMessageDialog(null, salida.substring(0, salida.length() - 1));
+                    return;
                 }
-                else {
-                    try {
-                        appendToPane(terminal,salida + "\n",Color.BLACK);
-                    } catch (BadLocationException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            }
-            if(!flag) {
                 try {
-                    appendToPane(terminal,"El Parsing no tuvo errores \n", Color.GREEN);
+                    appendToPane(terminal, salida + "\n", Color.BLACK);
                 } catch (BadLocationException ex) {
                     ex.printStackTrace();
                 }
+            }
+            try {
+                appendToPane(terminal, "El Parsing no tuvo errores \n", Color.GREEN);
+            } catch (BadLocationException ex) {
+                ex.printStackTrace();
             }
         }
     }
