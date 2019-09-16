@@ -5,8 +5,12 @@ public final class Token {
    private String valor;
    private Tokens tipo;
    private int clasificacion;
+   private int linea;
+   public int getLinea(){
+      return linea;
+   }
    public String toString() {
-      return this.clasificacion != -1 ? "Token encontrado...." + this.clas[this.clasificacion] + ' ' + this.valor: "Token error... " + this.valor + " no puede ser acepatado$";
+      return this.clasificacion != -1 ? "Token encontrado...." + this.clas[this.clasificacion] + ' ' + this.valor +" en la linea "+linea : "Token error...  en la linea"+linea+" " + this.valor + " no puede ser acepatado$";
    }
 
    public final String getValor() {
@@ -33,10 +37,11 @@ public final class Token {
       this.clasificacion = var1;
    }
 
-   Token(String valor, Tokens tipo, int clasificacion) {
+   Token(String valor, Tokens tipo, int clasificacion, int linea) {
       this.valor = valor;
       this.tipo = tipo;
       this.clasificacion = clasificacion;
+      this.linea=linea;
       this.clas = new String[]{"palabra reservada", "tipo de dato", "operador", "delimitador", "booleano", "identificador", "integer", "float"};
    }
 }

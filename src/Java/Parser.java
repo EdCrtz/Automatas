@@ -26,11 +26,11 @@ public final class Parser {
             estatutos.add("Error..... Se esperaba " + t.getCad() + " no <EOF>$");
             return;
         }
-        estatutos.add("Token Esperado " + t.getCad() + " Token Recibido " + tkn.getCad());
+        estatutos.add("Token Esperado " + t.getCad() + " Token Recibido " + tkn.getCad()+" en la linea "+thisToken.getLinea());
         if (tkn == t)
             advance();
         else
-            estatutos.add("Error..... Se esperaba " + t.getCad() + " no " + tkn.getCad() + "$");
+            estatutos.add("Error..... Se esperaba " + t.getCad() + " no " + tkn.getCad() +" en la linea "+thisToken.getLinea()+ "$");
     }
 
     public final void program() {
@@ -143,7 +143,7 @@ public final class Parser {
             eat(Tokens.NINTE);
             return new Idx("", new Typex("Integer"));
         } else {
-            estatutos.add("Error... falta una expresion$");
+            estatutos.add("Error... falta una expresion en la linea"+thisToken.getLinea()+"$");
         }
         return null;
     }

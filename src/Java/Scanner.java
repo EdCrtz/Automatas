@@ -1,7 +1,12 @@
 package Java;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,11 +18,12 @@ public final class Scanner {
     private ArrayList<String> estatutos;
 
     final Token getToken() {
-        if (indice == tokens.length)
-            return new Token("EOF",null, -2);
-        token = tokens[indice];
+        if (indice == misTokens.size())
+            return new Token("EOF",null, -2,-1);
+        token = misTokens.get(indice);
+        int linea = lineas.get(indice);
         indice++;
-        Token thisToken = new Token(token,null, -1);
+        Token thisToken = new Token(token,null, -1,linea);
         for (Tokens e : Tokens.values()) {
             if (token.equals(e.getCad())) {
                 thisToken.setTipo(e);
@@ -94,13 +100,35 @@ public final class Scanner {
     public ArrayList<String> dameSalidas() {
         return estatutos;
     }
-
-    public Scanner(String codigo) {
+    ArrayList<String> misTokens = new ArrayList<String>();
+    ArrayList<Integer> lineas = new ArrayList<Integer>();
+    public void generaTokens(String ruta) {
+        String linea="", token="";
+        StringTokenizer tokenizer;
+        try{
+            FileReader file = new FileReader(ruta);
+            BufferedReader archivoEntrada = new BufferedReader(file);
+            linea = archivoEntrada.readLine();
+            while (linea != null){
+                tokenizer = new StringTokenizer(linea);
+                while(tokenizer.hasMoreTokens()) {
+                    misTokens.add(tokenizer.nextToken());
+                    lineas.add(lineaNo);
+                }
+                lineaNo++;
+                linea=archivoEntrada.readLine();
+            }
+            archivoEntrada.close();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public Scanner(String ruta) {
         estatutos = new ArrayList<String>();
-        lineaNo = 0;
+        lineaNo = 1;
         indice = 0;
         token = "";
-        tokens = codigo.split("\\s+");
+        generaTokens(ruta);
         estatutos.add("Iniciando scanning");
     }
 }

@@ -182,7 +182,8 @@ public class Principal extends JFrame implements ActionListener {
         }
         if (e.getSource() == itemParser || e.getSource() == itemScanner) {
             terminal.setText("");
-            Scanner analisis = new Scanner(areaTexto.getText());
+            guardar(false);
+            Scanner analisis = new Scanner(archivo.getAbsolutePath());
             analisis.analizar();
             Parser parser = new Parser(analisis);
             for (String salida : analisis.dameSalidas()) {
