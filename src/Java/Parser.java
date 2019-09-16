@@ -60,10 +60,12 @@ public final class Parser {
             eat(Tokens.RBRACE);
             return null;
         } else if (tkn == Tokens.DO) {
-            Statx s;
+            Statx s ;
             Dox dox;
             eat(Tokens.DO);
-            s = statement();
+            do {
+                s = statement();
+            }while (tkn == Tokens.DO || tkn == Tokens.SIR || tkn == Tokens.ID || tkn == Tokens.LBRACE);
             eat(Tokens.UNTIL);
             eat(Tokens.LPAREN);
             ex = expresion();
