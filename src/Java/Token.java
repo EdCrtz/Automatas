@@ -3,7 +3,7 @@ package Java;
 public final class Token {
    private final String[] clas;
    private String valor;
-   private int tipo;
+   private Tokens tipo;
    private int clasificacion;
    public String toString() {
       return this.clasificacion != -1 ? "Token encontrado...." + this.clas[this.clasificacion] + ' ' + this.valor: "Token error... " + this.valor + " no puede ser acepatado$";
@@ -17,11 +17,11 @@ public final class Token {
       this.valor = var1;
    }
 
-   final int getTipo() {
+   final Tokens getTipo() {
       return this.tipo;
    }
 
-   final void setTipo(int var1) {
+   final void setTipo(Tokens var1) {
       this.tipo = var1;
    }
 
@@ -33,7 +33,7 @@ public final class Token {
       this.clasificacion = var1;
    }
 
-   Token(String valor, int tipo, int clasificacion) {
+   Token(String valor, Tokens tipo, int clasificacion) {
       this.valor = valor;
       this.tipo = tipo;
       this.clasificacion = clasificacion;

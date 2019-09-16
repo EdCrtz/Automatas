@@ -15,7 +15,8 @@ public class Principal extends JFrame implements ActionListener {
     private JMenuBar barraMenu;
     private JMenu menuArchivo, menuAnalisis;
     // Menu Archivo
-    private JMenuItem itemNuevo, itemAbrir, itemGuardar, itemSalir, itemParser, itemScanner, itemArbol;
+    private JMenuItem itemNuevo, itemAbrir, itemGuardar, itemSalir, itemParser, itemScanner,
+            itemArbol,itemGuardarComo;
     private JFileChooser ventanaArchivos;
     private File archivo;
     private JTextPane areaTexto, terminal;
@@ -48,6 +49,7 @@ public class Principal extends JFrame implements ActionListener {
         itemAbrir = new JMenuItem("Abrir...");
         itemGuardar = new JMenuItem("Guardar...");
         itemSalir = new JMenuItem("Salir");
+        itemGuardarComo = new JMenuItem("Guardar como...");
         itemSalir.addActionListener(this);
         itemGuardar.addActionListener(this);
         itemAbrir.addActionListener(this);
@@ -56,10 +58,12 @@ public class Principal extends JFrame implements ActionListener {
         itemParser = new JMenuItem("Parser");
         itemParser.addActionListener(this);
         itemScanner.addActionListener(this);
+        itemGuardarComo.addActionListener(this);
         ventanaArchivos = new JFileChooser();
         menuArchivo.add(itemNuevo);
         menuArchivo.add(itemAbrir);
         menuArchivo.add(itemGuardar);
+        menuArchivo.add(itemGuardarComo);
         menuArchivo.addSeparator();
         menuArchivo.add(itemSalir);
         menuAnalisis.add(itemScanner);
@@ -82,6 +86,7 @@ public class Principal extends JFrame implements ActionListener {
         add(consola);
         itemNuevo.setIcon(new ImageIcon("nuevo.png"));
         itemGuardar.setIcon(new ImageIcon("guardar.png"));
+        itemGuardarComo.setIcon(new ImageIcon("guardar.png"));
         itemAbrir.setIcon(new ImageIcon("abrir.png"));
         itemSalir.setIcon(new ImageIcon("salir.png"));
         itemScanner.setIcon(new ImageIcon("scanner.png"));
@@ -105,9 +110,9 @@ public class Principal extends JFrame implements ActionListener {
         new Principal();
     }
 
-    public boolean guardar() {
+    public boolean guardar(boolean flag) {
         try {
-            if (archivo == null) {
+            if (archivo == null||flag) {
                 ventanaArchivos.setDialogTitle("Guardando..");
                 ventanaArchivos.setFileSelectionMode(JFileChooser.FILES_ONLY);
                 if (ventanaArchivos.showSaveDialog(this) == JFileChooser.CANCEL_OPTION)
@@ -145,6 +150,15 @@ public class Principal extends JFrame implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == itemNuevo){
+            archivo = null;
+            terminal.setText("");
+            areaTexto.setText("");
+        }
+        if(e.getSource() == itemGuardarComo){
+            guardar(true);
+            return;
+        }
         if (e.getSource() == itemSalir) {
             System.exit(0);
             return;
@@ -160,7 +174,7 @@ public class Principal extends JFrame implements ActionListener {
             terminal.setText("");
         }
         if (e.getSource() == itemGuardar) {
-            guardar();
+            guardar(false);
             return;
         }
         if (e.getSource() == itemParser || e.getSource() == itemScanner) {
