@@ -71,11 +71,14 @@ public class Principal extends JFrame implements ActionListener {
         barraMenu.add(menuArchivo);
         barraMenu.add(menuAnalisis);
         areaTexto = new JTextPane();
+        TextLineNumber tln = new TextLineNumber(areaTexto);
         ventanaArchivos = new JFileChooser("Guardar");
         areaTexto.setFont(new Font("Consolas", Font.PLAIN, 12));
         documentos = new JTabbedPane();
         consola = new JTabbedPane();
-        documentos.addTab("Nuevo", new JScrollPane(areaTexto));
+        JScrollPane scroll = new JScrollPane(areaTexto);
+        scroll.setRowHeaderView(tln);
+        documentos.addTab("Nuevo", scroll);
         areaTexto.setDocument(new Documento());
         documentos.setToolTipText("Aqui se muestra el codigo");
         add(documentos);
