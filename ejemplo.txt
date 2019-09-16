@@ -1,0 +1,10 @@
+class X1
+     int a ;
+     boolean b ;
+{
+        a = 41 ;
+        system.in.readln ( b ) ;
+        do
+              b = true ;
+         until ( b ) 
+}
