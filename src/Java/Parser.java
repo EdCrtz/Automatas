@@ -143,7 +143,7 @@ public final class Parser {
             eat(Tokens.NINTE);
             return new Idx("", new Typex("Integer"));
         } else {
-            estatutos.add("Error... falta una expresion en la linea"+thisToken.getLinea()+"$");
+            estatutos.add("Error... falta una expresion en la linea "+thisToken.getLinea()+"$");
         }
         return null;
     }

@@ -21,7 +21,7 @@ public class Principal extends JFrame implements ActionListener {
     private File archivo;
     private JTextPane areaTexto, terminal;
     private JTabbedPane documentos, consola;
-    private String[] titulos = {"Tipo", "Nombre", "Valor"};
+    private String[] titulos = {"ID", "Tipo"};
     DefaultTableModel modelo = new DefaultTableModel(new Object[0][0], titulos);
 
     private JTable mitabla = new JTable(modelo);
@@ -182,7 +182,8 @@ public class Principal extends JFrame implements ActionListener {
         }
         if (e.getSource() == itemParser || e.getSource() == itemScanner) {
             terminal.setText("");
-            guardar(false);
+            if(!guardar(false))
+                return;
             Scanner analisis = new Scanner(archivo.getAbsolutePath());
             analisis.analizar();
             Parser parser = new Parser(analisis);
