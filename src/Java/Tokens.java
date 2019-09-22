@@ -6,7 +6,7 @@ public enum Tokens {
     BOOLEAN ("boolean"),
     DO ("do"),
     UNTIL ("until"),
-    SIR ("system.in.readln"),
+    SIR ("System.in.readln"),
     LBRACE ("{"),
     RBRACE ("}"),
     LPAREN ("("),

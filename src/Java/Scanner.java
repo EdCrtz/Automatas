@@ -27,7 +27,7 @@ public final class Scanner {
         for (Tokens e : Tokens.values()) {
             if (token.equals(e.getCad())) {
                 thisToken.setTipo(e);
-                if (Arrays.asList("do", "until", "class", "system.in.readln").contains(token)) {
+                if (Arrays.asList("do", "until", "class", "System.in.readln").contains(token)) {
                     thisToken.setClasificacion(0);
                     return thisToken;
                 }

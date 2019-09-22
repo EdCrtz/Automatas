@@ -122,13 +122,13 @@ public final class Parser {
                 tipo = tabladesimolos.get(thisToken.getValor());
                 idx2 = new Idx(thisToken.getValor(), new Typex(tipo));
                 eat(Tokens.ID);
-                return new Multiplicax(idx1, idx2);
+                return new Restax(idx1, idx2);
             } else if (tkn == Tokens.ASTER) {
                 eat(Tokens.ASTER);
                 tipo = tabladesimolos.get(thisToken.getValor());
                 idx2 = new Idx(thisToken.getValor(), new Typex(tipo));
                 eat(Tokens.ID);
-                return new Restax(idx1, idx2);
+                return new Multiplicax(idx1, idx2);
             }
         } else if (tkn == Tokens.FALSE) {
             eat(Tokens.FALSE);
