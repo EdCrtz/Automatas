@@ -10,7 +10,7 @@ public final class Token {
       return linea;
    }
    public String toString() {
-      return this.clasificacion != -1 ? "Token encontrado...." + this.clas[this.clasificacion] + ' ' + this.valor +" en la linea "+linea : "Token error...  en la linea"+linea+" " + this.valor + " no puede ser acepatado$";
+      return this.clasificacion != -1 ? "Token encontrado...." + this.clas[this.clasificacion] + ' ' + this.valor +" en la linea "+linea : "Token error...  en la linea "+linea+" " + this.valor + " no puede ser acepatado$";
    }
 
    public final String getValor() {

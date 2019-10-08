@@ -11,7 +11,7 @@ public final class Parser {
     private ArrayList<String> estatutos;
     public ArrayList<Declarax> declaraciones = new ArrayList<Declarax>();
     public ArrayList<Statx> statements = new ArrayList<Statx>();
-    Hashtable<String, String> tabladesimolos = new Hashtable<String, String>();
+    Hashtable<String, String> tabTipos = new Hashtable<String, String>();
     private Scanner scan;
     Programax p;
     private void advance() {
@@ -85,7 +85,7 @@ public final class Parser {
            return read;
         } else if (tkn == Tokens.ID) {
             Asignax as;
-            Idx idx = new Idx(thisToken.getValor(), new Typex(tabladesimolos.get(thisToken.getValor())));
+            Idx idx = new Idx(thisToken.getValor(), new Typex(tabTipos.get(thisToken.getValor())));
             eat(Tokens.ID);
             eat(Tokens.EQ);
             ex = expresion();
@@ -102,46 +102,46 @@ public final class Parser {
         Idx idx1;
         Idx idx2;
         if (tkn == Tokens.ID) {
-            tipo = tabladesimolos.get(thisToken.getValor());
+            tipo = tabTipos.get(thisToken.getValor());
             idx1 = new Idx(thisToken.getValor(), new Typex(tipo));
             eat(Tokens.ID);
             if (tkn == Tokens.MIN) {
                 eat(Tokens.MIN);
-                tipo = tabladesimolos.get(thisToken.getValor());
+                tipo = tabTipos.get(thisToken.getValor());
                 idx2 = new Idx(thisToken.getValor(), new Typex(tipo));
                 eat(Tokens.ID);
                 return new Comparax(idx1, idx2);
             } else if (tkn == Tokens.PLUS) {
                 eat(Tokens.PLUS);
-                tipo = tabladesimolos.get(thisToken.getValor());
+                tipo = tabTipos.get(thisToken.getValor());
                 idx2 = new Idx(thisToken.getValor(), new Typex(tipo));
                 eat(Tokens.ID);
                 return new Sumax(idx1, idx2);
             } else if (tkn == Tokens.MINUS) {
                 eat(Tokens.MINUS);
-                tipo = tabladesimolos.get(thisToken.getValor());
+                tipo = tabTipos.get(thisToken.getValor());
                 idx2 = new Idx(thisToken.getValor(), new Typex(tipo));
                 eat(Tokens.ID);
                 return new Restax(idx1, idx2);
             } else if (tkn == Tokens.ASTER) {
                 eat(Tokens.ASTER);
-                tipo = tabladesimolos.get(thisToken.getValor());
+                tipo = tabTipos.get(thisToken.getValor());
                 idx2 = new Idx(thisToken.getValor(), new Typex(tipo));
                 eat(Tokens.ID);
                 return new Multiplicax(idx1, idx2);
             }
         } else if (tkn == Tokens.FALSE) {
             eat(Tokens.FALSE);
-            return new Idx("", new Typex("Boolean"));
+            return new Constx( "false",new Typex("boolean"));
         } else if (tkn == Tokens.TRUE) {
             eat(Tokens.TRUE);
-            return new Idx("", new Typex("Boolean"));
+            return new Constx( "true",new Typex("boolean"));
         } else if (tkn == Tokens.NFLOA) {
             eat(Tokens.NFLOA);
-            return new Idx("", new Typex("Float"));
+            return new Constx(tkn.getCad(),new Typex("float"));
         } else if (tkn == Tokens.NINTE) {
             eat(Tokens.NINTE);
-            return new Idx("", new Typex("Integer"));
+            return new Constx(tkn.getCad(), new Typex("integer"));
         } else {
             estatutos.add("Error... falta una expresion en la linea "+thisToken.getLinea()+"$");
         }
@@ -158,24 +158,24 @@ public final class Parser {
             String var = thisToken.getValor();
             eat(Tokens.ID);
             eat(Tokens.SEMI);
-            tabladesimolos.put(var, "Boolean");
-            declaraciones.add(new Declarax(var, new Typex("Boolean")));
+            tabTipos.put(var, "boolean");
+            declaraciones.add(new Declarax(var, new Typex("boolean")));
             varDeclaration();
         } else if (tkn == Tokens.INT) {
             eat(Tokens.INT);
             String var = thisToken.getValor();
             eat(Tokens.ID);
             eat(Tokens.SEMI);
-            tabladesimolos.put(var, "Int");
-            declaraciones.add(new Declarax(var, new Typex("Int")));
+            tabTipos.put(var, "int");
+            declaraciones.add(new Declarax(var, new Typex("int")));
             varDeclaration();
         } else if (tkn == Tokens.FLOAT) {
             eat(Tokens.FLOAT);
             String var = thisToken.getValor();
             eat(Tokens.ID);
             eat(Tokens.SEMI);
-            tabladesimolos.put(var, "Float");
-            declaraciones.add(new Declarax(var, new Typex("Float")));
+            tabTipos.put(var, "float");
+            declaraciones.add(new Declarax(var, new Typex("float")));
             varDeclaration();
         }
 

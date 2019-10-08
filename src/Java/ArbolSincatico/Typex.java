@@ -1,6 +1,6 @@
 package Java.ArbolSincatico;
 
-public class Typex {
+public class Typex{
     private String s1;
 
     public Typex(String st1) {

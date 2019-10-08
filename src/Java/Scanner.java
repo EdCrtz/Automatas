@@ -92,7 +92,7 @@ public final class Scanner {
     }
 
     private boolean validaFloat(String t) {
-        Pattern pat = Pattern.compile("^[+-][1-9]+.[1-9]++$");
+        Pattern pat = Pattern.compile("^[+-][0-9]+.[0-9]++$");
         Matcher mat = pat.matcher(t);
         return mat.find();
     }
