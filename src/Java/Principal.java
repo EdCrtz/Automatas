@@ -10,7 +10,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Map;
 
 public class Principal extends JFrame implements ActionListener {
     private JMenuBar barraMenu;
@@ -20,7 +22,7 @@ public class Principal extends JFrame implements ActionListener {
             itemArbol,itemGuardarComo;
     private JFileChooser ventanaArchivos;
     private File archivo;
-    private JTextPane areaTexto, terminal;
+    private JTextPane areaTexto, terminal,intermedio;
     private JTabbedPane documentos, consola;
     private String[] titulos = {"ID", "Tipo"};
     DefaultTableModel modelo = new DefaultTableModel(new Object[0][0], titulos);
@@ -85,8 +87,12 @@ public class Principal extends JFrame implements ActionListener {
         add(documentos);
         terminal = new JTextPane();
         terminal.setEditable(false);
+        intermedio = new JTextPane();
+        intermedio.setEditable(false);
         consola.addTab("Consola", new JScrollPane(terminal));
         consola.addTab("Tabla", new JScrollPane(mitabla));
+        consola.addTab("Bytecode",new JScrollPane(intermedio));
+        intermedio.setFont(new Font("monospaced", Font.PLAIN, 12));
         add(consola);
         itemNuevo.setIcon(new ImageIcon("nuevo.png"));
         itemGuardar.setIcon(new ImageIcon("guardar.png"));
@@ -98,6 +104,7 @@ public class Principal extends JFrame implements ActionListener {
         documentos.setIconAt(0, new ImageIcon("codigo.png"));
         consola.setIconAt(0, new ImageIcon("consola.png"));
         consola.setIconAt(1, new ImageIcon("tabla.png"));
+        consola.setIconAt(2, new ImageIcon("java.png"));
         consola.setToolTipText("Aqui se muestra el resultado del analisis");
     }
 
@@ -183,6 +190,7 @@ public class Principal extends JFrame implements ActionListener {
         }
         if (e.getSource() == itemParser || e.getSource() == itemScanner) {
             terminal.setText("");
+            intermedio.setText("");
             if(!guardar(false))
                 return;
             Scanner analisis = new Scanner(archivo.getAbsolutePath());
@@ -212,7 +220,7 @@ public class Principal extends JFrame implements ActionListener {
             if (e.getSource() == itemScanner)
                 return;
             parser.program();
-            for (String salida : parser.dameSalida()) {
+            for (String salida :(ArrayList<String>)  parser.dameSalida()) {
                 if (salida.charAt(salida.length() - 1) == '$') {
                     try {
                         appendToPane(terminal, salida.substring(0, salida.length() - 1) + "\n", Color.RED);
@@ -233,6 +241,38 @@ public class Principal extends JFrame implements ActionListener {
             } catch (BadLocationException ex) {
                 ex.printStackTrace();
             }
+            for (String salida :(ArrayList<String>)  parser.dameSemantico()) {
+                if (salida.charAt(salida.length() - 1) == '$') {
+                    try {
+                        appendToPane(terminal, salida.substring(0, salida.length() - 1) + "\n", Color.RED);
+                    } catch (BadLocationException ex) {
+                        ex.printStackTrace();
+                    }
+                    JOptionPane.showMessageDialog(null, salida.substring(0, salida.length() - 1));
+                    return;
+                }
+                try {
+                    appendToPane(terminal, salida + "\n", Color.BLACK);
+                } catch (BadLocationException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            try {
+                appendToPane(terminal, "El semantico no tuvo errores \n", Color.GREEN);
+            } catch (BadLocationException ex) {
+                ex.printStackTrace();
+            }
+            for (Map.Entry<String, String> var : parser.tablaSimbolos.entrySet()){
+                modelo.addRow(new String []{var.getKey(), var.getValue()});
+            }
+            String fina="";
+            for (ByteLine linea: parser.byteCode){
+                fina += linea.toString()+"\n";
+            }
+            intermedio.setText(fina);
+            JOptionPane.showMessageDialog(null,"Se genero codigo intermedio");
         }
+
+
     }
 }

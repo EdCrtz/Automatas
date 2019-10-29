@@ -20,7 +20,7 @@ public enum Tokens {
     NINTE ("Numero entero"),
     NFLOA ("Numero float"),
     SEMI (";"),
-    FALSE ("flase"),
+    FALSE ("false"),
     TRUE ("true");
     private String cad;
     public String getCad(){

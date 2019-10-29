@@ -9,6 +9,14 @@ public class Asignax extends Statx{
         s2 = st2;
     }
 
+    public Idx getS1() {
+        return s1;
+    }
+
+    public Expx getS2() {
+        return s2;
+    }
+
     public String getAsignax() {
         return s1.toString();
     }
