@@ -144,6 +144,17 @@ public final class Parser{
                 }
             }
             return validaTipos(compa.getS1(), compa.getS2());
+        }else if(ex instanceof Constx){
+            Constx constante =(Constx)ex;
+            if(sta instanceof Readx){
+                if(!constante.getType().equals("float")){
+                    byteCode.add(new ByteLine("iconst_",valconst(constante),1));
+                }
+                else {
+                    byteCode.add(new ByteLine(ByteLine.ponBlancos("ldc",15),""+valconst(constante),2));
+                }
+            }
+            return constante.getType();
         }
         return "";
     }
