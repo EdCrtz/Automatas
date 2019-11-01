@@ -18,8 +18,7 @@ public class Principal extends JFrame implements ActionListener {
     private JMenuBar barraMenu;
     private JMenu menuArchivo, menuAnalisis;
     // Menu Archivo
-    private JMenuItem itemNuevo, itemAbrir, itemGuardar, itemSalir, itemParser, itemScanner,
-            itemArbol,itemGuardarComo;
+    private JMenuItem itemNuevo, itemAbrir, itemGuardar, itemSalir, itemParser, itemScanner,itemGuardarComo,itemSemantico,itemIntermedio;
     private JFileChooser ventanaArchivos;
     private File archivo;
     private JTextPane areaTexto, terminal,intermedio;
@@ -62,6 +61,10 @@ public class Principal extends JFrame implements ActionListener {
         itemParser.addActionListener(this);
         itemScanner.addActionListener(this);
         itemGuardarComo.addActionListener(this);
+        itemSemantico = new JMenuItem("Semantico");
+        itemSemantico.addActionListener(this);
+        itemIntermedio = new JMenuItem("Bytecode");
+        itemIntermedio.addActionListener(this);
         ventanaArchivos = new JFileChooser();
         menuArchivo.add(itemNuevo);
         menuArchivo.add(itemAbrir);
@@ -71,6 +74,8 @@ public class Principal extends JFrame implements ActionListener {
         menuArchivo.add(itemSalir);
         menuAnalisis.add(itemScanner);
         menuAnalisis.add(itemParser);
+        menuAnalisis.add(itemSemantico);
+        menuAnalisis.add(itemIntermedio);
         barraMenu.add(menuArchivo);
         barraMenu.add(menuAnalisis);
         areaTexto = new JTextPane();
@@ -101,6 +106,8 @@ public class Principal extends JFrame implements ActionListener {
         itemSalir.setIcon(new ImageIcon("salir.png"));
         itemScanner.setIcon(new ImageIcon("scanner.png"));
         itemParser.setIcon(new ImageIcon("parser.png"));
+        itemSemantico.setIcon(new ImageIcon("semantico.png"));
+        itemIntermedio.setIcon(new ImageIcon("java.png"));
         documentos.setIconAt(0, new ImageIcon("codigo.png"));
         consola.setIconAt(0, new ImageIcon("consola.png"));
         consola.setIconAt(1, new ImageIcon("tabla.png"));
@@ -165,6 +172,8 @@ public class Principal extends JFrame implements ActionListener {
             archivo = null;
             terminal.setText("");
             areaTexto.setText("");
+            modelo = new DefaultTableModel(new Object[0][0], titulos);
+            mitabla.setModel(modelo);
         }
         if(e.getSource() == itemGuardarComo){
             guardar(true);
@@ -183,14 +192,19 @@ public class Principal extends JFrame implements ActionListener {
             documentos.setTitleAt(0, archivo.getName());
             abrir();
             terminal.setText("");
+            intermedio.setText("");
+            modelo = new DefaultTableModel(new Object[0][0], titulos);
+            mitabla.setModel(modelo);
         }
         if (e.getSource() == itemGuardar) {
             guardar(false);
             return;
         }
-        if (e.getSource() == itemParser || e.getSource() == itemScanner) {
+        if (e.getSource() == itemParser || e.getSource() == itemScanner|| e.getSource()== itemSemantico||e.getSource() == itemIntermedio) {
             terminal.setText("");
             intermedio.setText("");
+            modelo = new DefaultTableModel(new Object[0][0], titulos);
+            mitabla.setModel(modelo);
             if(!guardar(false))
                 return;
             Scanner analisis = new Scanner(archivo.getAbsolutePath());
@@ -241,36 +255,40 @@ public class Principal extends JFrame implements ActionListener {
             } catch (BadLocationException ex) {
                 ex.printStackTrace();
             }
-            for (String salida :(ArrayList<String>)  parser.dameSemantico()) {
-                if (salida.charAt(salida.length() - 1) == '$') {
+            if(e.getSource()==itemSemantico || e.getSource()==itemIntermedio){
+                for (String salida :(ArrayList<String>)  parser.dameSemantico()) {
+                    if (salida.charAt(salida.length() - 1) == '$') {
+                        try {
+                            appendToPane(terminal, salida.substring(0, salida.length() - 1) + "\n", Color.RED);
+                        } catch (BadLocationException ex) {
+                            ex.printStackTrace();
+                        }
+                        JOptionPane.showMessageDialog(null, salida.substring(0, salida.length() - 1));
+                        return;
+                    }
                     try {
-                        appendToPane(terminal, salida.substring(0, salida.length() - 1) + "\n", Color.RED);
+                        appendToPane(terminal, salida + "\n", Color.BLACK);
                     } catch (BadLocationException ex) {
                         ex.printStackTrace();
                     }
-                    JOptionPane.showMessageDialog(null, salida.substring(0, salida.length() - 1));
-                    return;
                 }
                 try {
-                    appendToPane(terminal, salida + "\n", Color.BLACK);
+                    appendToPane(terminal, "El semantico no tuvo errores \n", Color.GREEN);
                 } catch (BadLocationException ex) {
                     ex.printStackTrace();
                 }
+                for (Map.Entry<String, String> var : parser.tablaSimbolos.entrySet()){
+                    modelo.addRow(new String []{var.getKey(), var.getValue()});
+                }
             }
-            try {
-                appendToPane(terminal, "El semantico no tuvo errores \n", Color.GREEN);
-            } catch (BadLocationException ex) {
-                ex.printStackTrace();
+            if(itemIntermedio==e.getSource()) {
+                String fina = "";
+                for (ByteLine linea : parser.byteCode) {
+                    fina += linea.toString() + "\n";
+                }
+                intermedio.setText(fina);
+                JOptionPane.showMessageDialog(null, "Se genero codigo intermedio");
             }
-            for (Map.Entry<String, String> var : parser.tablaSimbolos.entrySet()){
-                modelo.addRow(new String []{var.getKey(), var.getValue()});
-            }
-            String fina="";
-            for (ByteLine linea: parser.byteCode){
-                fina += linea.toString()+"\n";
-            }
-            intermedio.setText(fina);
-            JOptionPane.showMessageDialog(null,"Se genero codigo intermedio");
         }
 
 
