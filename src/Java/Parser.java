@@ -168,11 +168,11 @@ public final class Parser{
                 validaStatement(ciclo.getS2());
                 tipo =validaExpresion(ciclo.getS1(),ciclo);
                 if(ciclo.getS1() instanceof Comparax){
-                    if(!tipo.equals("float")) {
+                    if(tipo.equals("float")) {
                         byteCode.add(new ByteLine("fcmpg", "", 1));
                         byteCode.add(new ByteLine(ByteLine.ponBlancos("iflt",15), "" + aux, 3));
                     }else
-                        byteCode.add(new ByteLine(ByteLine.ponBlancos("if_fcmplt",15),""+aux,3));
+                        byteCode.add(new ByteLine(ByteLine.ponBlancos("if_icmplt",15),""+aux,3));
                 } else if(ciclo.getS1() instanceof Constx){
                     if(((Constx)ciclo.getS1()).getS1().equals("true")){
                         byteCode.add(new ByteLine(ByteLine.ponBlancos("goto",15),""+aux,3));
